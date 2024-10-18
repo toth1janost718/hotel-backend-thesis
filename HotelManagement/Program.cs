@@ -1,9 +1,17 @@
+using HotelManagement.Data;
+using HotelManagement.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Az adatbázis kapcsolat regisztrálása
+builder.Services.AddDbContext<HotelDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDbConnection")));
+
+// Az API mûködéséhez szükséges Swagger konfigurálása 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -17,9 +25,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapControllers();  // A végpontok bejegyzése
 
 app.Run();
